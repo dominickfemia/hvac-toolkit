@@ -62,15 +62,3 @@ import pandas as pd
 data = pd.read_csv('data/digitized_friction_data.csv')
 print(data.head())
 ```
-
-
-- **What’s here:**  
-  - `data/` → digitized dataset samples  
-  - `model_training/` → full XGBoost pipeline (train → export lookup table)  
-  - `xgboost_internal_demo/` → educational gradient boosting demo  
-  - `docs/` → brief method notes  
-
-## Quickstart
-```bash
-pip install -r requirements.txt
-python model_training/train_xgboost.py
