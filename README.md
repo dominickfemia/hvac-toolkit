@@ -54,32 +54,32 @@ In summary, XGBoost serves as our regression engine to learn $f = F(\text{Re}, \
 
 The repository contains a fully commented Python script (or Jupyter Notebook) that walks through the entire model development process, from reading data to outputting results. This script is designed to be easy to follow, even for those new to machine learning. Below is an outline of what the implementation covers:
 
-1. Importing Libraries: We use Python’s scientific stack – primarily pandas for data handling, numpy for numeric operations, and xgboost (along with scikit-learn wrappers) for the regression model. All required libraries are listed at the top of the script. (If setting up the environment, the user should install XGBoost via pip or conda. The repository may include a requirements.txt noting the package versions for reproducibility.)
+1. **Importing Libraries:** We use Python’s scientific stack – primarily pandas for data handling, numpy for numeric operations, and xgboost (along with scikit-learn wrappers) for the regression model. All required libraries are listed at the top of the script. (If setting up the environment, the user should install XGBoost via pip or conda. The repository may include a requirements.txt noting the package versions for reproducibility.)
 
-2. Loading the Dataset: The CSV file of digitized points is read into a pandas DataFrame. We then inspect the data (printing out a few samples) to ensure it loaded correctly. The code might look like:
+2. **Loading the Dataset:** The CSV file of digitized points is read into a pandas DataFrame. We then inspect the data (printing out a few samples) to ensure it loaded correctly. The code might look like:
 ```
 import pandas as pd
 data = pd.read_csv('data/digitized_friction_data.csv')
 print(data.head())
 ```
 
-  The DataFrame contains columns like Re, rel_roughness, and friction_factor. We confirm that these match expectations (e.g., Re ranges and values make sense).
+The DataFrame contains columns like Re, rel_roughness, and friction_factor. We confirm that these match expectations (e.g., Re ranges and values make sense).
 
-3. Feature Engineering: We prepare the input features and target variable. For example:
+3. **Feature Engineering:** We prepare the input features and target variable. For example:
 ```
 X = data[['Re', 'rel_roughness']].copy()
 y = data['friction_factor'].copy()
 ```
 
-  Optionally, we apply a logarithmic transform to Re and rel_roughness here (this will be noted in the comments if done). We then split the data into a training set and a test (validation) set, using a certain ratio (commonly 80/20 or 70/30). This could use             sklearn.model_selection.train_test_split for reproducibility. The split ensures we can evaluate the model on data it hasn’t seen during training.
+Optionally, we apply a logarithmic transform to Re and rel_roughness here (this will be noted in the comments if done). We then split the data into a training set and a test (validation) set, using a certain ratio (commonly 80/20 or 70/30). This could use             sklearn.model_selection.train_test_split for reproducibility. The split ensures we can evaluate the model on data it hasn’t seen during training.
 
-4. Training the XGBoost Regressor: We initialize an XGBoost regressor (for example, using XGBRegressor from xgboost.sklearn module) with some default or tuned hyperparameters. For instance:
+4. **Training the XGBoost Regressor:** We initialize an XGBoost regressor (for example, using XGBRegressor from xgboost.sklearn module) with some default or tuned hyperparameters. For instance:
 ```
 from xgboost import XGBRegressor
 model = XGBRegressor(n_estimators=100, max_depth=5, learning_rate=0.1)
 model.fit(X_train, y_train)
 ```
 
-  The code includes comments explaining each parameter: n_estimators is the number of trees, max_depth controls how complex each tree can be, learning_rate scales the contribution of each new tree (preventing overfitting by making training more gradual), etc. During training, XGBoost will output its progress (or we can suppress it) – the script might show training logs or simply state that training is complete.
+The code includes comments explaining each parameter: n_estimators is the number of trees, max_depth controls how complex each tree can be, learning_rate scales the contribution of each new tree (preventing overfitting by making training more gradual), etc. During training, XGBoost will output its progress (or we can suppress it) – the script might show training logs or simply state that training is complete.
 
-5. Model Evaluation: After training, we check how well the model learned the data. The code will compute predictions on the held-out test set:
+5. **Model Evaluation:** After training, we check how well the model learned the data. The code will compute predictions on the held-out test set:
