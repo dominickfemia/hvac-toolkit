@@ -14,10 +14,3 @@ This repo is the **technical companion** to my [Notion portfolio](https://gomech
 ```bash
 pip install -r requirements.txt
 python model_training/train_xgboost.py
-
-Background
-
-The classic Colebrook equation is implicit and requires iteration . The Moody chart provides empirical f values but is ±5–10% accurate .
-This repo shows how an XGBoost model can approximate those values directly, providing fast, explicit predictions.
-
-(Full narrative, screenshots, and validation are on the Notion portfolio.)
