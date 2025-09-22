@@ -62,3 +62,12 @@ import pandas as pd
 data = pd.read_csv('data/digitized_friction_data.csv')
 print(data.head())
 ```
+
+The DataFrame contains columns like Re, rel_roughness, and friction_factor. We confirm that these match expectations (e.g., Re ranges and values make sense).
+
+3. Feature Engineering: We prepare the input features and target variable. For example:
+```
+X = data[['Re', 'rel_roughness']].copy()
+y = data['friction_factor'].copy()
+```
+
