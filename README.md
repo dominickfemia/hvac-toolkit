@@ -63,7 +63,7 @@ data = pd.read_csv('data/digitized_friction_data.csv')
 print(data.head())
 ```
 
-The DataFrame contains columns like Re, rel_roughness, and friction_factor. We confirm that these match expectations (e.g., Re ranges and values make sense).
+  The DataFrame contains columns like Re, rel_roughness, and friction_factor. We confirm that these match expectations (e.g., Re ranges and values make sense).
 
 3. Feature Engineering: We prepare the input features and target variable. For example:
 ```
@@ -71,3 +71,15 @@ X = data[['Re', 'rel_roughness']].copy()
 y = data['friction_factor'].copy()
 ```
 
+  Optionally, we apply a logarithmic transform to Re and rel_roughness here (this will be noted in the comments if done). We then split the data into a training set and a test (validation) set, using a certain ratio (commonly 80/20 or 70/30). This could use             sklearn.model_selection.train_test_split for reproducibility. The split ensures we can evaluate the model on data it hasn’t seen during training.
+
+4. Training the XGBoost Regressor: We initialize an XGBoost regressor (for example, using XGBRegressor from xgboost.sklearn module) with some default or tuned hyperparameters. For instance:
+```
+from xgboost import XGBRegressor
+model = XGBRegressor(n_estimators=100, max_depth=5, learning_rate=0.1)
+model.fit(X_train, y_train)
+```
+
+  The code includes comments explaining each parameter: n_estimators is the number of trees, max_depth controls how complex each tree can be, learning_rate scales the contribution of each new tree (preventing overfitting by making training more gradual), etc. During training, XGBoost will output its progress (or we can suppress it) – the script might show training logs or simply state that training is complete.
+
+5. Model Evaluation: After training, we check how well the model learned the data. The code will compute predictions on the held-out test set:
