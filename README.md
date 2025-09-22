@@ -1,6 +1,6 @@
 # HVAC Engineering Toolkit
 
-This repo is the **technical companion** to my [Notion portfolio](gomechra.com).
+This repo is the **technical companion** to my Notion portfolio (gomechra.com).
 
 ## Introduction
 
