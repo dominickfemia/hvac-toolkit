@@ -83,3 +83,10 @@ model.fit(X_train, y_train)
 The code includes comments explaining each parameter: n_estimators is the number of trees, max_depth controls how complex each tree can be, learning_rate scales the contribution of each new tree (preventing overfitting by making training more gradual), etc. During training, XGBoost will output its progress (or we can suppress it) – the script might show training logs or simply state that training is complete.
 
 5. **Model Evaluation:** After training, we check how well the model learned the data. The code will compute predictions on the held-out test set:
+```
+y_pred = model.predict(X_test)
+```
+
+We then measure error using metrics like Mean Absolute Error (MAE) or Root Mean Square Error (RMSE). For interpretability, we might also calculate the max error or average percentage error relative to true friction factor values. This gives an idea of whether the model is within the ±5% range for most points, for example. The results (printed to console) will tell us if the model is sufficiently accurate. If not, we could iterate on hyperparameters or data (this process would be documented in comments so readers understand the tuning process).
+
+**6. Generating the Lookup Table:** One practical outcome of this project is to produce a lookup table of friction factors that engineers could use directly (for example, in Excel or other tools) without needing the ML code. To do this, we use the trained XGBoost model to predict friction factors on a grid of Re and roughness values. The script programmatically creates a fine grid, for example:
