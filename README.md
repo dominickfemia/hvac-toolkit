@@ -1,9 +1,16 @@
 # HVAC Engineering Toolkit (Excel + ML)
 
-This repository contains the **engineering backbone** behind my HVAC Toolkit:
-- Code to train an **XGBoost** surrogate for Darcy friction factor and export a dense **(Re, ε/D) → f** lookup grid.
-- Concise method/integration notes for using the grid in Excel.
-- Tiny tests and sample data to verify the export.
+This repo is the **technical companion** to my [Notion portfolio](https://gomechra.com).
 
-> 📌 **Deliberate split:** This repo omits the Excel workbook and full visual/narrative.  
-> For the complete case study (screenshots, worked examples, validation story), see **Portfolio:** https://gomechra.com
+- **What it is:** Machine learning surrogate for Darcy–Weisbach friction factor.  
+- **Why ML?** Avoids iterative Colebrook solves and anchors to real data (Moody + Nikuradse).  
+- **What’s here:**  
+  - `data/` → digitized dataset samples  
+  - `model_training/` → full XGBoost pipeline (train → export lookup table)  
+  - `xgboost_internal_demo/` → educational gradient boosting demo  
+  - `docs/` → brief method notes  
+
+## Quickstart
+```bash
+pip install -r requirements.txt
+python model_training/train_xgboost.py
