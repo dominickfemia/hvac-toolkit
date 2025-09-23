@@ -1,6 +1,7 @@
 # HVAC Engineering Toolkit (Excel + Machine Learning)
 
 This repo is the **technical companion** to my [Notion portfolio](https://gomechra.com).
+[![Visit Portfolio](https://img.shields.io/badge/Portfolio-gomechra.com-blue)](https://gomechra.com)
 
 ## Introduction
 
