@@ -1,6 +1,6 @@
 # HVAC Engineering Toolkit (Excel + Machine Learning)
 
-This repo is the **technical companion** to my [portfolio](https://gomechra.com).
+This repo is the **technical companion** to my [toolkit portfolio](https://gomechra.com).
 
 ## Introduction
 
