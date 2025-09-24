@@ -24,11 +24,11 @@ Moreover, the ML approach is inherently data-driven. The Moody diagram itself wa
 
 ## Data Collection and Preparation
 
-The first step was to build a dataset of known friction factor values over a wide range of flow conditions. I obtained data by digitizing classical experimental results from Moody (1944) and Nikuradse (1933) charts:
+The first step was to build a dataset of known friction factor values over a wide range of flow conditions. I obtained data by digitizing classical experimental results from Moody (1944) and Nikuradse (1933) charts. **I first digitized Nikuradse but the roughness curves didnt go as low as i wanted for smooth pipe/duct conditions so the data set was supplemented with Moody chart digitization of smooth roughness curve. the moody curves are different from nikuradse in that they are not directly based on experimental results but combine nikuradse experiments, colebrook & white experiments. this made ML data set more robust, while still using fundamentally empirical exoerimental measurements for friction factor.**
+
+Nikuradse (1933): For corresponding relative roughness (ε/D) curves, I obtained the Reynolds number and friction factor using WebPlotDigitizer. **MORE HERE**
 
 Moody (1944): I extracted points from the Moody diagram covering different flow regimes for various relative roughness values. This involved reading values of friction factor $f$ at many combinations of Re and ε/D along the Moody curves. **MORE HERE**
-
-Nikuradse (1933): I also included data from Johannes Nikuradse’s classic experiments on sand-roughened pipes. **MORE HERE**
 
 The resulting dataset was compiled into a table (CSV file) with the following columns: Reynolds number, relative roughness (ε/D), and corresponding friction factor $f$. Note that this data is shown here under file name digitized_data.csv as a placeholder for code demonstration. The actual data set is integrated into the toolkit and not available as a stand-alone file.
 
