@@ -174,3 +174,55 @@ Finally, the repository includes references to the original Notion page or repor
 ## Conclusion
 
 This GitHub repository is the technical companion to the friction factor toolkit, showcasing how modern machine learning can solve a classic engineering problem in fluid mechanics. Readers can expect to come away with not only a working model for friction factor prediction but also an understanding of how and why it works. By organizing the content as described and providing clear documentation, the project stands alone as a reproducible and educational resource. I encourage users to explore the code, tweak the model, or even contribute improvements. Whether one’s interest is in fluid dynamics or in machine learning (or both), this toolkit provides a concrete example of their intersection – using data and algorithms to augment traditional engineering methods in a practical, interpretable way.
+
+
+
+
+
+
+## 🤖 XGBoost Implementation
+
+<details>
+<summary>Click to expand Python code</summary>
+
+```python
+# train_xgboost.py
+# Fully commented script: load data, train XGBoost, export lookup table
+
+import pandas as pd
+import numpy as np
+from xgboost import XGBRegressor
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_absolute_error
+
+# 1. Load dataset
+data = pd.read_csv("data/digitized_friction_data.csv")
+X = data[['Re', 'rel_roughness']]
+y = data['friction_factor']
+
+# Optional: transform features (log scale helps with range)
+X['logRe'] = np.log10(X['Re'])
+X['logRR'] = np.log10(X['rel_roughness'])
+X = X[['logRe', 'logRR']]
+
+# 2. Split into train/test
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# 3. Train XGBoost
+model = XGBRegressor(n_estimators=200, max_depth=6, learning_rate=0.1)
+model.fit(X_train, y_train)
+
+# 4. Evaluate
+y_pred = model.predict(X_test)
+print("MAE:", mean_absolute_error(y_test, y_pred))
+
+# 5. Export lookup table
+Re_range = np.logspace(3.7, 8, num=100)
+rr_range = np.logspace(-6, -2, num=50)
+grid = [(Re, rr) for Re in Re_range for rr in rr_range]
+grid_df = pd.DataFrame(grid, columns=['Re','rel_roughness'])
+grid_df['logRe'] = np.log10(grid_df['Re'])
+grid_df['logRR'] = np.log10(grid_df['rel_roughness'])
+
+grid_df['f_pred'] = model.predict(grid_df[['logRe','logRR']])
+grid_df.to_csv("data/friction_factor_lookup.csv", index=False)
