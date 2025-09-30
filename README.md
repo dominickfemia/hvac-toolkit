@@ -26,9 +26,16 @@ Moreover, the ML approach is inherently data-driven. The Moody diagram itself wa
 
 The first step was to build a dataset of known friction factor values over a wide range of flow conditions. I obtained data by digitizing classical experimental results from Moody (1944) and Nikuradse (1933) charts. **I first digitized Nikuradse but the roughness curves didnt go as low as i wanted for smooth pipe/duct conditions so the data set was supplemented with Moody chart digitization of smooth roughness curve. the moody curves are different from nikuradse in that they are not directly based on experimental results but combine nikuradse experiments, colebrook & white experiments. this made ML data set more robust, while still using fundamentally empirical exoerimental measurements for friction factor.**
 
-Nikuradse (1933): For corresponding relative roughness (ε/D) curves, I obtained the Reynolds number and friction factor using WebPlotDigitizer. **MORE HERE**
+Nikuradse (1933): log(Re), log(100*f*), r/k convert to e/D from 1/(2(r/k))
+converted to Re (range 550-1.2 million), f (range 0.0189-0.143), and e/D (range 0.0010-0.0333)
 
-Moody (1944): I extracted points from the Moody diagram covering different flow regimes for various relative roughness values. This involved reading values of friction factor $f$ at many combinations of Re and ε/D along the Moody curves. **MORE HERE**
+For corresponding relative roughness (ε/D) curves, I obtained the Reynolds number and friction factor using WebPlotDigitizer. **MORE HERE**
+
+Moody (1944) via ASHRAE (2021): Re (range 3100-99 million), f (range 0.008-0.045), e/D (range 0.00001-0.0010) (no processing needed)
+
+I extracted points from the Moody diagram covering different flow regimes for various relative roughness values. This involved reading values of friction factor $f$ at many combinations of Re and ε/D along the Moody curves. **MORE HERE**
+
+**Overlap of two data sets at e/D = 0.001 for continuity**
 
 The resulting dataset was compiled into a table (CSV file) with the following columns: Reynolds number, relative roughness (ε/D), and corresponding friction factor $f$. Note that this data is shown here under file name digitized_data.csv as a placeholder for code demonstration. The actual data set is integrated into the toolkit and not available as a stand-alone file.
 
