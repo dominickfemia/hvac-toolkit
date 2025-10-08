@@ -30,6 +30,9 @@ Using **machine learning (ML)** for this problem offers two main advantages:
 2. Anchors predictions to real experimental data.
 
 The **Colebrook–White equation** is implicit (the friction factor *f* appears on both sides), so it must be solved using iterative numerical methods or empirical approximations. In practice, each evaluation can require multiple computational steps, which become cumbersome when repeated across large systems or optimization routines.
+An ML model, once trained, provides an **explicit predictive function; given *Re* and *ε/D*, it outputs *f* directly, with no iteration required.
+
+**STOPPED HERE**
 
 requires iterative numerical methods to find the friction factor because the formula is implicit (f appears on both sides). In practical terms, solving for friction factor might require several computational steps or approximation techniques. A machine learning model, once trained, provides an explicit predictive function. Given Reynolds number and relative roughness, it directly outputs the friction factor with no need for iteration.
 
