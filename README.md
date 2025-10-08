@@ -92,9 +92,9 @@ Below is the step-by-step outline:
 1. **Import Libraries**
 
    The script begins by importing Python's core scientific stack:
-   - pandas for data handling
-   - numpy for numerical operations
-   - xgboost (and scikit-learn wrappers) for regression modeling
+   1. pandas for data handling
+   2. numpy for numerical operations
+   3. xgboost (and scikit-learn wrappers) for regression modeling
 
 ```
 code
@@ -104,16 +104,15 @@ code
 
    Read the CSV file of digitized points into a pandas DataFrame.
    Display a few rows using df.head() to verify that the data loaded correctly and that the columns (Re, ε/D, f) appear as     expected.
-   For this example, a placeholder file *digitized_data.csv is used to simulate the original dataset.
+   For this example, a placeholder file *digitized_data.csv* is used to simulate the original dataset.
+
 ```
-import pandas as pd
-data = pd.read_csv('data/digitized_friction_data.csv')
-print(data.head())
+code
 ```
 
-The DataFrame contains columns representing Reynolds number, relative roughness, and friction factor. Confirm that these match expectations (e.g., Re ranges and values make sense).
+3. **Feature Engineering and Data Splitting**
 
-3. **Feature Engineering:** Pprepare the input features and target variable:
+   Prepare the input features and target variable:
 ```
 X = data[['Re', 'rel_roughness']].copy()
 y = data['friction_factor'].copy()
