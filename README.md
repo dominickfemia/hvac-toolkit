@@ -229,7 +229,7 @@ This repository demonstrates the machine learning workflow behind the toolkit’
 It focuses on the XGBoost model, from data preparation and training to understanding the underlying gradient boosting process.
 The example code, explanatory comments, and simplified boosting demonstration are designed to make the method transparent and reproducible.
 
-The **toolkit itself** (Excel-based with integrated ML lookup functionality) is showcased separately on [project portfolio site](https://gomechra.com), where you can explore the broader engineering context, interface design, and validation results.
+The **toolkit itself** (Excel-based with integrated ML lookup functionality) is showcased separately on the [project portfolio site](https://gomechra.com), where you can explore the broader engineering context, interface design, and validation results.
 
 This repository is intended as a technical companion to that portfolio, highlighting the model development, reasoning, and implementation details behind the data-driven approach.
 
