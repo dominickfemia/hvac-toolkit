@@ -50,7 +50,8 @@ The Moody data provided smoother surface conditions, whereas the Nikuradse data 
 | Nikuradse  | 550 – 1.2 × 10⁶       | 0.0189 – 0.143      | 0.0010 – 0.0333           |
 | Moody      | 3.1 × 10³ – 9.9 × 10⁷ | 0.008 – 0.045       | 0.00001 – 0.0010          |
 
-The two resulting datasets were compiled into a table (CSV file) with the following columns: Reynolds number, relative roughness (ε/D), and friction factor $f$. Note that the raw data is represented in this repo under the file name *digitized_data.csv* as a placeholder for code demonstration. The actual data set is integrated into the toolkit and not available as a stand-alone file.
+The combined dataset was compiled into a single CSV file with columns for **Re**, **ε/D**, and **friction factor (f)**.
+For demonstration purposes, this repository references a placeholder file named *digitized_data.csv*. The actual dataset is integrated directly into the private version of the toolkit and is **not distributed** as a standalone file.
 
 ## Model Selection: XGBoost Regression
 
