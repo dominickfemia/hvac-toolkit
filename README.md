@@ -44,8 +44,15 @@ The first step was to assemble a dataset of known friction factor values by digi
 The Moody data provided smoother surface conditions, whereas the Nikuradse data contributed higher roughness curves. Together, they form a robust, complementary dataset.
 
 <p align="center">
-  <img src="moody_chart.jpg" alt="Moody Chart" width="48%"/>
-  <img src="nikuradse_chart.jpg" alt="Nikuradse Data" width="48%"/>
+  <figure style="display:inline-block; margin: 0 10px; text-align:center;">
+    <img src="moody_chart.jpg" alt="Moody Chart" width="48%"/>
+    <figcaption><b>Figure 1.</b> Moody (1944) </figcaption>
+  </figure>
+
+  <figure style="display:inline-block; margin: 0 10px; text-align:center;">
+    <img src="nikuradse_chart.jpg" alt="Nikuradse Data" width="48%"/>
+    <figcaption><b>Figure 2.</b> Nikuradse (1933) </figcaption>
+  </figure>
 </p>
 
 **Range of represented values:**
