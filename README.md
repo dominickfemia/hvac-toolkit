@@ -147,7 +147,7 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_
 
    Using train_test_split fron sklearn-learn maintains reproducibility and preventS overfitting by holding out a portion of the data for validation.
    
-4. **Training the XGBoost Regressor**
+4. **Train the XGBoost Regressor**
 
    Initialize an XGBRegressor model with tuned or default hyperparameters, then fit it to the training data.
 
@@ -189,7 +189,7 @@ Use metrics like **Mean Absolute Error (MAE)** and **Root Mean Square Error (RMS
 For example, an RMSE within ±5% of typical friction factor values indicates strong agreement with the experimental data.
 If performance is unsatisfactory, consider adjusting hyperparameters (e.g., n_estimators, max_depth, or learning_rate) or revisiting data quality.
 
-6. **Generating the Lookup Table**
+6. **Generate the Lookup Table**
 
    Produce a lookup table of predicted friction factors over a grid of *Re* and *ε/D*.
    This lets downstream tools (e.g., Excel) use the table directly without running the ML code.
@@ -239,7 +239,10 @@ print("Wrote friction_factor_lookup_wide.csv")
 
 7. **Results and Sample Usage**
 
-   Across non-error producing input bounds (realistic observable data), the machine learning model produced results consistent with the Churchill approximation witin 0.2 to 4.9%.
+   In the HVAC Engineering Toolkit, the **Churchill approximation** serves as the **default friction factor calculation method**, a widely accepted explicit equation that avoids iterative solving of the Colebrook relation.
+   The machine learning model developed here was trained to replicate those same physical trends while grounding its predictions in empirical data from Moody and Nikuradse.
+
+   Within the **trained, physically realistic range** (i.e., non-error-producing input bounds), the ML model produced results **consistent with the Churchill approximation**, typically within **0.2%–4.9% deviation** on held-out validation points.
 
 ## Understanding XGBoost’s Internal Workings
 
@@ -252,55 +255,65 @@ The goal is not to rebuild XGBoost entirely, but to show the **core learning pro
 
 - **Simplified Implementation**
 
-  Instead of constructing full decision trees from scratch, the demonstration below uses basic tools to mimic the key ideas.
-  The code shows how boosting can iteratively fit to residuals to improve prediction accuracy.
+   Instead of building full decision trees and managing gradient weights internally (as XGBoost does),
+the demonstration below uses basic tools to **mimic the key logic of boosting**, fitting small trees to the residuals of prior predictions.
+   This illustrates how gradient boosting gradually improves model accuracy through iterative correction.
 
 ```python
 from sklearn.tree import DecisionTreeRegressor
+import numpy as np
 
-# Start with an initial prediction (e.g., mean of y)
-initial_pred = y_train.mean()
-y_pred_current = np.full(y_train.shape, initial_pred)
-model_trees = []  # to store the sequence of trees
-n_boost_rounds = 3  # for demonstration, build 3 trees sequentially
+# Start with an initial prediction (e.g., mean of targets)
+initial_pred = np.mean(y_train)
+y_pred_current = np.full_like(y_train, fill_value=initial_pred, dtype=float)
+
+model_trees = []       # list to store sequential trees
+n_boost_rounds = 3     # small number for demonstration clarity
 
 for i in range(n_boost_rounds):
-    # Compute residuals (current errors)
+    # 1. Compute residuals (current prediction errors)
     residuals = y_train - y_pred_current
-    # Train a small decision tree on residuals
-    tree = DecisionTreeRegressor(max_depth=3)
+
+    # 2. Fit a small decision tree to predict residuals
+    tree = DecisionTreeRegressor(max_depth=3, random_state=RANDOM_STATE)
     tree.fit(X_train, residuals)
     model_trees.append(tree)
-    # Update the current prediction by adding the new tree’s predictions
+
+    # 3. Update predictions by adding the new tree’s corrections
     y_pred_current += tree.predict(X_train)
+
+print(f"Trained {len(model_trees)} sequential trees.")
 ```
 
-   This loop mimics the gradient boosting process. Each tree learns to predict the residual error left by the previous model iteration.
-   Over successive boosting rounds, these small corrective models collectively reduce error and improve prediction accuracy.
-   In this demonstration, only a few boosting iterations are shown for clarity.
-   After training, the variable model_trees holds the sequence of fitted trees that together form the final ensemble model, a simplified representation of how XGBoost builds its predictions.
+   Each tree learns to correct the residual error left by the previous iteration.
+   After a few rounds, the sequence of trees (model_trees) collectively forms a small ensemble model, a simplified version of how XGBoost builds predictions through gradient boosting.
+   Only three rounds are shown here for clarity, but in practice hundreds may be used.
 
 - **Applying the Ensemble**
 
   Once the ensemble of trees has been trained, use it to **predict new values**.
-  Each tree contributes a small correction to the overall  prediction, which begins with the model's initial baseline estimate (often the mean of the target values).
+  Each tree contributes a small correction to the overall  prediction, starting from the model's initial baseline estimate (typically the mean of the target values).
   For a given input pair *(Re, ε/D)*:
   
 ```python
 def predict_ensemble(Re, rr):
-    # Start with initial prediction
+    """Compute the ensemble prediction for a given (Re, ε/D)."""
     pred = initial_pred
     for tree in model_trees:
-        pred += tree.predict([[Re, rr]])[0]
+        pred += tree.predict(np.array([[Re, rr]]))[0]
     return pred
 
+# Example: compare predicted vs actual for one test sample
 sample = X_test.iloc[0]
-print("Ensemble prediction:", predict_ensemble(sample['Re'], sample['rel_roughness']))
-print("Actual friction factor:", y_test.iloc[0])
+predicted_f = predict_ensemble(sample['Re'], sample['rel_roughness'])
+actual_f = y_test.iloc[0]
+
+print(f"Ensemble prediction: {predicted_f:.5f}")
+print(f"Actual friction factor: {actual_f:.5f}")
 ```
 
-   The above function accumulates the contributions from each weak learner, combining them with the initial prediction to form the final output.
-   After running this simplified booster, the script prints a comparison between the **ensemble’s predictions** and the **true friction factor values** for a few test examples. This demonstrates how even a small number of boosting rounds can begin to capture the nonlinear relationship between flow parameters and friction factor.
+   The above function accumulates contributions from each weak learner, combining them with the initial baseline prediction to form the final output.
+   After running this simplified booster, the script prints a comparison between the **ensemble’s predictions** and the **true friction factor values** for one or more test examples. This demonstrates how even a small number of boosting rounds can start to capture the **nonlinear relationship** between flow parameters and friction factor.
 
 ## Summary and Next Steps
 
