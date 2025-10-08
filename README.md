@@ -41,7 +41,7 @@ In this project, the model was trained on **digitized Moody and Nikuradse chart 
 
 The first step was to assemble a dataset of known friction factor values by digitizing classical experimental results from **Moody (1944)** and **Nikuradse (1933)** charts. Digitizing both sources ensured consistency and overlap (particularly around values corresponding to *ε/D = 0.001*) while covering a broad range of **Reynolds numbers** and **relative roughness**.
 
-The Moody data provided smoother surface conditions, whereas the Nikuradse data contributed higher roughness curves. Together, they form a robust, complementary dataset.
+The Moody data (*Figure 1 below*) provided smoother surface conditions, whereas the Nikuradse data (*Figure 2 below*) contributed higher roughness curves. Together, they form a robust, complementary dataset.
 
 ### Moody (1944) – Digitized Friction Factor Chart
 ![Moody Chart](moody_chart.jpg)
@@ -54,6 +54,8 @@ The Moody data provided smoother surface conditions, whereas the Nikuradse data 
 ![Nikuradse Chart](nikuradse_chart.jpg)
 
 *Figure 2. Nikuradse (1933) – Experimental results used to establish roughness correlations and validate turbulent flow behavior.*
+
+---
 
 **Range of represented values:**
 
