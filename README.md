@@ -113,11 +113,18 @@ RANDOM_STATE = 42
 2. **Load the Dataset**
 
    Read the CSV file of digitized points into a pandas DataFrame.
-   Display a few rows using df.head() to verify that the data loaded correctly and that the columns (Re, ε/D, f) appear as     expected.
+   Display a few rows using data.head() to confirm the file loaded correctly and that the expected columns (Re, rel_roughness, friction_factor) are present.
    For this example, a placeholder file *digitized_data.csv* is used to simulate the original dataset.
 
 ```python
+# Load dataset (placeholder example)
 data = pd.read_csv('digitized_data.csv')
+
+# Quick structure check
+print(data.shape)
+print(data.columns.tolist())
+
+# Preview first few rows
 data.head()
 ```
 
@@ -126,38 +133,65 @@ data.head()
    Prepare the **input features** and **target variable**:
    
 ```python
-X = data[['Re', 'epsilon_D']]
-y = data['f']
+# Define input features and target variable
+X = data[['Re', 'rel_roughness']].copy()
+y = data['friction_factor'].copy()
 ```
 
-   Next, split the dataset into **training** and **testing** sets using an 80/20 ratio. This ensures the model is evaluated on unseen data, providing a fair measure of performance. 
+   Split the dataset into **training** and **testing** sets using an 80/20 ratio.
+   This ensures the model is evaluated on unseen data, providing a fair measure of generalization performance. 
 
 ```python
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=RANDOM_STATE)
 ```
 
-   Using train_test_split fron sklearn-learn maintains reproducibility and helps prevent overfitting by keeping a portion of the data strictly for validation.
+   Using train_test_split fron sklearn-learn maintains reproducibility and preventS overfitting by holding out a portion of the data for validation.
    
-4. **Training the XGBoost Regressor:** Initialize an XGBoost regressor (for example, using XGBRegressor from xgboost.sklearn module) with some default or tuned hyperparameters:
+4. **Training the XGBoost Regressor**
+
+   Initialize an XGBRegressor model with tuned or default hyperparameters, then fit it to the training data.
 
 ```python
-model = XGBRegressor(n_estimators=200, max_depth=5, learning_rate=0.1, random_state=42)
+# Initialize and train the model
+model = XGBRegressor(
+    n_estimators=200,   # number of boosted trees
+    max_depth=5,        # tree complexity (higher = more flexible)
+    learning_rate=0.1,  # step size shrinkage (stabilizes learning)
+    subsample=0.9,      # fraction of data sampled for each tree
+    colsample_bytree=0.9,  # fraction of features sampled per tree
+    random_state=RANDOM_STATE,
+    n_jobs=-1           # use all CPU cores
+)
+
 model.fit(X_train, y_train)
 ```
 
-The following explains each parameter: n_estimators is the number of trees, max_depth controls how complex each tree can be, and learning_rate scales the contribution of each new tree (preventing overfitting by making training more gradual).
+5. **Model Evaluation**
 
-5. **Model Evaluation:** After training, check how well the model learned the data. The code computes predictions on the held-out test set:
+   After training, evaluate the model’s performance on the held-out test set.
+   Predictions are generated for the test data and compared to the true friction factor values.
 
 ```python
+# Generate predictions on test set
 y_pred = model.predict(X_test)
+
+# Compute evaluation metrics
+mae = mean_absolute_error(y_test, y_pred)
 rmse = mean_squared_error(y_test, y_pred, squared=False)
 r2 = r2_score(y_test, y_pred)
+
+print(f"MAE:  {mae:.6f}")
+print(f"RMSE: {rmse:.6f}")
+print(f"R²:   {r2:.4f}")
 ```
 
-Measure error using metrics like Mean Absolute Error (MAE) or Root Mean Square Error (RMSE). This gives an idea of whether the model is within the ±5% range for most points, for example. The results (printed to console) will demonstrate if the model is sufficiently accurate. If not, iterate on hyperparameters or data.
+Use metrics like **Mean Absolute Error (MAE)** and **Root Mean Square Error (RMSE)** to understand how close predictions are to actual data points.
+For example, an RMSE within ±5% of typical friction factor values indicates strong agreement with the experimental data.
+If performance is unsatisfactory, consider adjusting hyperparameters (e.g., n_estimators, max_depth, or learning_rate) or revisiting data quality.
 
-6. **Generating the Lookup Table:** Produce a lookup table of friction factors that can be used directly without needing the machine learning code. Use the trained XGBoost model to predict friction factors on a grid of Re and roughness values. The script programmatically creates a fine grid, for example:
+6. **Generating the Lookup Table**
+
+   Produce a lookup table of friction factors that can be used directly without needing the machine learning code. Use the trained XGBoost model to predict friction factors on a grid of Re and roughness values. The script programmatically creates a fine grid, for example:
 
 ```python
 re_min, re_max = data["Re"].min(), data["Re"].max()
