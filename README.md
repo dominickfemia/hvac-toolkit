@@ -91,7 +91,11 @@ Below is the step-by-step outline:
 
 1. **Import Libraries**
 
-   Use Python’s scientific stack – primarily pandas for data handling, numpy for numeric operations, and xgboost (along with scikit-learn wrappers) for the regression model. All required libraries are listed at the top of the script.
+   The script begins by importing Python's core scientific stack:
+   - pandas for data handling
+   - numpy for numerical operations
+   - xgboost (and scikit-learn wrappers) for regression modeling
+
 ```
 code
 ```
