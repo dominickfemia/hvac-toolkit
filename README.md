@@ -39,7 +39,7 @@ In this project, the model was trained on **digitized Moody and Nikuradse chart 
 
 ## Data Collection and Preparation
 
-The first step was to assemble a dataset of known friction factor values by digitizing classical experimental results from **Moody (1944)** and **Nikuradse (1933)** charts using WebPLotDigitizer (https://automeris.io/). Digitizing both sources ensured consistency and overlap (particularly around values corresponding to *ε/D = 0.001*) while covering a broad range of **Reynolds numbers** and **relative roughness**.
+The first step was to assemble a dataset of known friction factor values by digitizing classical experimental results from **Moody (1944)** and **Nikuradse (1933)** charts using [WebPlotDigitizer.](https://automeris.io/) Digitizing both sources ensured consistency and overlap (particularly around values corresponding to *ε/D = 0.001*) while covering a broad range of **Reynolds numbers** and **relative roughness**.
 
 The Moody data (*Figure 1 below*) provided smoother surface conditions, whereas the Nikuradse data (*Figure 2 below*) contributed higher roughness curves. Together, they form a robust, complementary dataset.
 
