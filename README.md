@@ -92,15 +92,19 @@ Below is the step-by-step outline:
 1. **Import Libraries**
 
    The script begins by importing Python's core scientific stack:
-- pandas for data handling
-- numpy for numerical operations
-- xgboost (and scikit-learn wrappers) for regression modeling
+   - pandas for data handling
+   - numpy for numerical operations
+   - xgboost (and scikit-learn wrappers) for regression modeling
 
 ```
 code
 ```
 
-2. **Loading the Dataset:** Read the CSV file of digitized points into a pandas DataFrame. Inspect the data (printing out a few samples) to ensure it loaded correctly:
+2. **Load the Dataset**
+
+   Read the CSV file of digitized points into a pandas DataFrame.
+   Display a few rows using df.head() to verify that the data loaded correctly and that the columns (Re, ε/D, f) appear as     expected.
+   For this example, a placeholder file *digitized_data.csv is used to simulate the original dataset.
 ```
 import pandas as pd
 data = pd.read_csv('data/digitized_friction_data.csv')
