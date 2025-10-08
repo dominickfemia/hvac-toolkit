@@ -77,11 +77,11 @@ This process effectively minimizes the overall prediction error over many boosti
 XGBoost’s implementation is known for being fast, parallelized, and regularized, which helps prevent overfitting while maintaining high accuracy.
 
 For **friction factor prediction**, XGBoost offers several advantages:
-- **Nonlinear function approximation:** The relationship between $f$ and $(\text{Re}, \epsilon/D)$ is highly nonlinear as evidenced by the curves on the Moody chart. XGBoost can model complex nonlinear relationships by combining many decision tree splits, capturing the curvature in the data.
-- **Speed and efficiency:** Despite thousands of data points, XGBoost can train the model quickly. Once trained, predictions are almost instantaneous, which is great for engineering tools with repetitive calculations.
-- **Accuracy and tuning flexibility:** XGBoost provides hyperparameters (tree depth, number of trees, learning rate, etc.) that can be tuned to improve accuracy. In practice, even default settings produce a reasonable model, but refinement options allow for greater overall accuracy.
+- **Nonlinear function approximation:** The relationship between *f* and *(Re, ε/D)* is highly nonlinear, as shown by the curvature of the Moody chart. XGBoost models these complex patterns by combining many decision tree splits.
+- **Speed and efficiency:** Despite using thousands of data points, XGBoost trains rapidly. Once trained, predictions are nearly instantaneous, ideal for engineering tools that perform repeated calculations.
+- **Accuracy and tuning flexibility:** XGBoost provides tunable hyperparameters (e.g., tree depth, number of trees, learning rate) to balance accuracy and generalization. Even default settings yield reliable performance, but fine-tuning can push accuracy further.
 
-Simply put, XGBoost served as my regression engine to learn $f = F(\text{Re}, \epsilon/D)$ from the data.
+In short, XGBoost serves as the **regression engine** that learns the mapping *f = F(Re, ε/D)*, transforming classical fluid dynamics relationships into a fast, data-driven model.
 
 ## XGBoost Model Implementation (Code Outline)
 
