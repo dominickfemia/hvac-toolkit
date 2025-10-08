@@ -99,7 +99,11 @@ Below is the step-by-step outline:
 **STOPPED HERE**
 
 ```python
-code
+import pandas as pd
+import numpy as np
+from xgboost import XGBRegressor
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error, r2_score
 ```
 
 2. **Load the Dataset**
@@ -109,7 +113,8 @@ code
    For this example, a placeholder file *digitized_data.csv* is used to simulate the original dataset.
 
 ```python
-code
+df = pd.read_excel('digitized_data.csv', sheet_name='Sheet1')
+df.head()
 ```
 
 3. **Feature Engineering and Data Splitting**
@@ -117,13 +122,14 @@ code
    Prepare the **input features** and **target variable**:
    
 ```python
-code
+X = df[['Re', 'epsilon_D']]
+y = df['f']
 ```
 
    Next, split the dataset into **training** and **testing** sets using an 80/20 ratio. This ensures the model is evaluated on unseen data, providing a fair measure of performance. 
 
 ```python
-code
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 ```
 
    Using train_test_split fron sklearn-learn maintains reproducibility and helps prevent overfitting by keeping a portion of the data strictly for validation.
@@ -131,7 +137,8 @@ code
 4. **Training the XGBoost Regressor:** Initialize an XGBoost regressor (for example, using XGBRegressor from xgboost.sklearn module) with some default or tuned hyperparameters:
 
 ```python
-code
+model = XGBRegressor(n_estimators=200, max_depth=5, learning_rate=0.1, random_state=42)
+model.fit(X_train, y_train)
 ```
 
 The following explains each parameter: n_estimators is the number of trees, max_depth controls how complex each tree can be, and learning_rate scales the contribution of each new tree (preventing overfitting by making training more gradual).
@@ -139,7 +146,9 @@ The following explains each parameter: n_estimators is the number of trees, max_
 5. **Model Evaluation:** After training, check how well the model learned the data. The code computes predictions on the held-out test set:
 
 ```python
-code
+y_pred = model.predict(X_test)
+rmse = mean_squared_error(y_test, y_pred, squared=False)
+r2 = r2_score(y_test, y_pred)
 ```
 
 Measure error using metrics like Mean Absolute Error (MAE) or Root Mean Square Error (RMSE). This gives an idea of whether the model is within the ±5% range for most points, for example. The results (printed to console) will demonstrate if the model is sufficiently accurate. If not, iterate on hyperparameters or data.
@@ -147,7 +156,17 @@ Measure error using metrics like Mean Absolute Error (MAE) or Root Mean Square E
 6. **Generating the Lookup Table:** Produce a lookup table of friction factors that can be used directly without needing the machine learning code. Use the trained XGBoost model to predict friction factors on a grid of Re and roughness values. The script programmatically creates a fine grid, for example:
 
 ```python
-code
+re_vals = np.logspace(np.log10(df['Re'].min()), np.log10(df['Re'].max()), 50)
+eps_vals = np.linspace(df['epsilon_D'].min(), df['epsilon_D'].max(), 20)
+
+grid_re, grid_eps = np.meshgrid(re_vals, eps_vals)
+grid_points = np.column_stack([grid_re.ravel(), grid_eps.ravel()])
+
+
+predicted_f = model.predict(grid_points)
+f_grid = predicted_f.reshape(len(eps_vals), len(re_vals))
+
+lookup_df.to_excel('friction_factor_lookup_table.xlsx')
 ```
 
 Reshape or organize the output into a table or matrix form. Save this table to a CSV file.
