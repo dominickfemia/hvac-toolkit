@@ -69,12 +69,17 @@ For demonstration purposes, this repository references a placeholder file named 
 
 ## Model Selection: XGBoost Regression
 
-I chose XGBoost (Extreme Gradient Boosting) as the regression algorithm for this model due to its strong performance on structured, tabular datasets. XGBoost is an open-source library that implements a powerful form of gradient-boosted decision trees. In gradient boosting, an ensemble of shallow “weak learner” trees are built sequentially, each new tree correcting the errors of the previous ones, which effectively minimizes the overall prediction error. XGBoost’s implementation is known for being fast and highly optimized, featuring parallelized tree building and advanced regularization to prevent overfitting.
+I selected XGBoost (Extreme Gradient Boosting) as the regression algorithm for this model due to its strong performance on structured, tabular datasets.
+XGBoost is an open-source library that implements an optimized form of **gradient-boosted decision trees**.
+In gradient boosting, an ensemble of shallow *weak learners* (decision trees) is built sequentially, each new tree correcting the residual errors of the previous ones.
+This process effectively minimizes the overall prediction error over many boosting rounds.
 
-For friction factor prediction, using XGBoost offers a few benefits:
-- Nonlinear function approximation: The relationship between $f$ and $(\text{Re}, \epsilon/D)$ is highly nonlinear as evidenced by the curves on the Moody chart. XGBoost can model complex nonlinear relationships by combining many decision tree splits, capturing the curvature in the data.
-- Speed and efficiency: Despite thousands of data points, XGBoost can train the model quickly. Once trained, predictions are almost instantaneous, which is great for engineering tools with repetitive calculations.
-- Accuracy and tuning: XGBoost provides hyperparameters (tree depth, number of trees, learning rate, etc.) that can be tuned to improve accuracy. In practice, even default settings produce a reasonable model, but refinement options allow for greater overall accuracy.
+XGBoost’s implementation is known for being fast, parallelized, and regularized, which helps prevent overfitting while maintaining high accuracy.
+
+For **friction factor prediction**, XGBoost offers several advantages:
+- **Nonlinear function approximation:** The relationship between $f$ and $(\text{Re}, \epsilon/D)$ is highly nonlinear as evidenced by the curves on the Moody chart. XGBoost can model complex nonlinear relationships by combining many decision tree splits, capturing the curvature in the data.
+- **Speed and efficiency:** Despite thousands of data points, XGBoost can train the model quickly. Once trained, predictions are almost instantaneous, which is great for engineering tools with repetitive calculations.
+- **Accuracy and tuning flexibility:** XGBoost provides hyperparameters (tree depth, number of trees, learning rate, etc.) that can be tuned to improve accuracy. In practice, even default settings produce a reasonable model, but refinement options allow for greater overall accuracy.
 
 Simply put, XGBoost served as my regression engine to learn $f = F(\text{Re}, \epsilon/D)$ from the data.
 
