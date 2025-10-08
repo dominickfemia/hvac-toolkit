@@ -233,15 +233,17 @@ The **toolkit itself** (Excel-based with integrated ML lookup functionality) is 
 
 This repository is intended as a technical companion to that portfolio, highlighting the model development, reasoning, and implementation details behind the data-driven approach.
 
-## 📬 Contact
+## Contact
 
 For questions, feedback, or collaboration inquiries:
 
-📧 Email: [info.help@gomechra.com](mailto:info.help@gomechra.com)
+Email: [info.help@gomechra.com](mailto:info.help@gomechra.com)
 
-💼 LinkedIn: Connect on LinkedIn[Connect on LinkedIn](https://www.linkedin.com/in/dominick-femia/)
+LinkedIn: [Connect on LinkedIn](https://www.linkedin.com/in/dominick-femia/)
 
-🌐 Portfolio: [gomechra.com](https://gomechra.com)
+Portfolio: [gomechra.com](https://gomechra.com)
+
+**DELETE BELOW, FOR REFERENCE**
 
 ## 🤖 XGBoost Implementation
 
