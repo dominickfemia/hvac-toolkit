@@ -7,6 +7,7 @@
 This repository complements my project’s portfolio page by focusing on the **machine learning extension** of the provided friction calculators.
 It provides enough context to stand on its own while remaining more concise than the full portfolio documentation.
 The toolkit addresses the classic **Colebrook-White equation** for fluid-flow friction factor, using modern data-driven methods.
+
 In traditional engineering practice, this equation is *implicit* and must be solved iteratively, an approach that becomes time-consuming for large or repeated calculations.
 The well-known **Moody diagram**, compiled from thousands of experimental tests (including Nikuradse's pipe-flow experiments), has long been used to estimate friction factor graphically.
 This project leverages **machine learning (ML)** to directly predict the **Darcy–Weisbach friction factor** directly from flow conditions, providing a fast, explicit, and highly accurate alternative to manual or iterative solutions.
@@ -32,17 +33,19 @@ Using **machine learning (ML)** for this problem offers two main advantages:
 The **Colebrook–White equation** is implicit (the friction factor *f* appears on both sides), so it must be solved using iterative numerical methods or empirical approximations. In practice, each evaluation can require multiple computational steps, which become cumbersome when repeated across large systems or optimization routines.
 An ML model, once trained, provides an **explicit predictive function; given *Re* and *ε/D*, it outputs *f* directly, with no iteration required.
 
-**STOPPED HERE**
+Additionally, this approach is inherently **data-driven**. Instead of relying on a single empirical formula, an ML model can be trained on a broad set of known (Re, ε/D, f) points, capturing the nonlinear relationships across laminar, transitional, and turbulent regimes.
 
-requires iterative numerical methods to find the friction factor because the formula is implicit (f appears on both sides). In practical terms, solving for friction factor might require several computational steps or approximation techniques. A machine learning model, once trained, provides an explicit predictive function. Given Reynolds number and relative roughness, it directly outputs the friction factor with no need for iteration.
-
-Moreover, the ML approach is inherently data-driven. The Moody diagram itself was a data-driven solution compiled from several experiments. Instead of relying on a specific empirical formula, a model can be trained on a broad set of known $(\text{Re}, \epsilon/D, f)$ data points and capture the complex relationship across laminar, transitional, and turbulent flow regimes. In this project, I used published data points from Moody’s chart and Nikuradse’s experiments so the model’s predictions are anchored to observed phenomena, potentially improving accuracy and ensuring that subtle trends are learned. Using machine learning is also flexible since the model can be retrained or expanded if new data become available.
+In this project, the model was trained on **digitized Moody and Nikuradse chart data**, grounding its predictions in real observed behavior. Because the method is flexible, the model can easily be **retrained or extended** as new data becomes available.
 
 ## Data Collection and Preparation
 
-The first step was to build a dataset of known friction factor values, which I obtained by digitizing classical experimental results from Moody (1944) and Nikuradse (1933) charts. Digitizing both data sets provided consistency and statistical overlap (values corresponding to ε/D = 0.001) over a wider range of Reynolds numbers and relative roughness values. The data from Moody provided smoother surface conditions to supplement the higher magnitude roughness curves from the Nikuradse data set. See below for the range of values represented within each dataset.
+The first step was to assemble a dataset of known friction factor values by digitizing classical experimental results from **Moody (1944)** and **Nikuradse (1933)** charts. Digitizing both sources ensured consistency and overlap (particularly around values corresponding to *ε/D = 0.001*) while covering a broad range of **Reynolds numbers** and **relative roughness**.
 
-| Source     | Reynolds Number (Re) | Friction Factor (f) | Relative Roughness (ε/D) |
+The Moody data provided smoother surface conditions, whereas the Nikuradse data contributed higher roughness curves. Together, they form a robust, complementary dataset.
+
+**Range of represented values:**
+
+| **Source**     | **Reynolds Number (Re)** | **Friction Factor (f)** | **Relative Roughness (ε/D)** |
 |------------|-----------------------|---------------------|---------------------------|
 | Nikuradse  | 550 – 1.2 × 10⁶       | 0.0189 – 0.143      | 0.0010 – 0.0333           |
 | Moody      | 3.1 × 10³ – 9.9 × 10⁷ | 0.008 – 0.045       | 0.00001 – 0.0010          |
