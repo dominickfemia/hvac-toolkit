@@ -43,17 +43,17 @@ The first step was to assemble a dataset of known friction factor values by digi
 
 The Moody data provided smoother surface conditions, whereas the Nikuradse data contributed higher roughness curves. Together, they form a robust, complementary dataset.
 
-<p align="center">
-  <figure style="display:inline-block; margin: 0 10px; text-align:center;">
-    <img src="moody_chart.jpg" alt="Moody Chart" width="48%"/>
-    <figcaption><b>Figure 1.</b> Moody (1944) </figcaption>
-  </figure>
+### Moody (1944) – Digitized Friction Factor Chart
+![Moody Chart](moody_chart.jpg)
 
-  <figure style="display:inline-block; margin: 0 10px; text-align:center;">
-    <img src="nikuradse_chart.jpg" alt="Nikuradse Data" width="48%"/>
-    <figcaption><b>Figure 2.</b> Nikuradse (1933) </figcaption>
-  </figure>
-</p>
+*Figure 1. Moody (1944) – Classic friction factor diagram digitized for dataset creation.*
+
+---
+
+### Nikuradse (1933) – Sand-Roughened Pipe Flow Data
+![Nikuradse Chart](nikuradse_chart.jpg)
+
+*Figure 2. Nikuradse (1933) – Experimental results used to establish roughness correlations and validate turbulent flow behavior.*
 
 **Range of represented values:**
 
