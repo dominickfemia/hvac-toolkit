@@ -160,13 +160,22 @@ Reshape or organize the output into a table or matrix form. Save this table to a
 
 7. **Results and Sample Usage:** Across non-error producing input bounds (realistic observable data), the machine learning model produced results consistent with the Churchill approximation witin 0.2 to 4.9%.
 
+**CONTINUED HERE**
+
 ## Understanding XGBoost’s Internal Workings
 
-To bridge the gap between just using a machine learning library and understanding how it works, this repository includes a second code breakdown that delves into the inner mechanism of gradient boosting. This section recreates a simplified version of what XGBoost does when training a model.
+To bridge the gap between **using** a machine learning library and **understanding** how it works, this section provides a second, simplified code example that illustrates the internal logic behind gradient boosting.
+The goal is not to rebuild XGBoost entirely, but to show the **core learning process** it follows during training.
 
-- **Gradient Boosting Concept:** The idea is to start with an initial prediction (e.g., the average friction factor in the training set) and then iteratively add decision trees that predict the residual errors left by the previous model.
+- **Gradient Boosting Concept**
 
-- **Simplified Implementation:** Rather than writing a full tree-building algorithm from scratch (which is quite complex), the example below leverages existing tools in a didactic way:
+  Gradient boosting starts with an initial prediction (for example, the mean friction factor of the training data). It then iteratively adds shallow decision trees that predict the residual error, which is the difference between the model's previous predictions and the true target values. Each new tree incrementally corrects the model's mistakes, gradually minimizing overall error.
+
+- **Simplified Implementation**
+
+  Instead of constructing full decision trees from scratch, the demonstration below uses basic tools to mimic the key ideas.
+  The code shows how boosting can iteratively fit to residuals to improve prediction accuracy.
+
 ```
 from sklearn.tree import DecisionTreeRegressor
 
@@ -187,9 +196,17 @@ for i in range(n_boost_rounds):
     y_pred_current += tree.predict(X_train)
 ```
 
-This loop mimics the boosting process: each tree is trying to predict the residual (error) from the previous approximation. Only a few boosting rounds are used in this demonstration for clarity. After this, model_trees would contain a sequence of trees that together form an ensemble.
+This loop mimics the gradient boosting process. Each tree learns to predict the residual error left by the previous model iteration.
+Over successive boosting rounds, these small corrective models collectively reduce error and improve prediction accuracy.
+In this demonstration, only a few boosting iterations are shown for clarity.
+After training, the variable model_trees holds the sequence of fitted trees that together form the final ensemble model, a simplified representation of how XGBoost builds its predictions.
 
-- **Applying the Ensemble:** Use the ensemble to predict new values. Essentially, sum the predictions of all the trees along with the initial prediction. For a given input $(\text{Re}, \epsilon/D)$:
+- **Applying the Ensemble**
+
+  Once the ensemble of trees has been trained, use it to **predict new values**.
+  Each tree contributes a small correction to the overall  prediction, which begins with the model's initial baseline estimate (often the mean of the target values).
+  For a given input pair *(Re, ε/D)*:
+  
 ```
 def predict_ensemble(Re, rr):
     # Start with initial prediction
@@ -203,9 +220,28 @@ print("Ensemble prediction:", predict_ensemble(sample['Re'], sample['rel_roughne
 print("Actual friction factor:", y_test.iloc[0])
 ```
 
-The above function accumulates contributions from each weak learner. After running the simplified booster, the script prints out a comparison between the ensemble’s predictions and the true values for a few examples. This confirms that even a small number of trees can start to capture the relationship.
+The above function accumulates the contributions from each weak learner, combining them with the initial prediction to form the final output.
+After running this simplified booster, the script prints a comparison between the **ensemble’s predictions** and the **true friction factor values** for a few test examples. This demonstrates how even a small number of boosting rounds can begin to capture the nonlinear relationship between flow parameters and friction factor.
 
-**Using the Toolkit:** To use the trained model, directly utilize the generated lookup CSV table.
+## Summary and Next Steps
+
+This repository demonstrates the machine learning workflow behind the toolkit’s friction factor prediction system.
+It focuses on the XGBoost model, from data preparation and training to understanding the underlying gradient boosting process.
+The example code, explanatory comments, and simplified boosting demonstration are designed to make the method transparent and reproducible.
+
+The **toolkit itself** (Excel-based with integrated ML lookup functionality) is showcased separately on [project portfolio site](https://gomechra.com), where you can explore the broader engineering context, interface design, and validation results.
+
+This repository is intended as a technical companion to that portfolio, highlighting the model development, reasoning, and implementation details behind the data-driven approach.
+
+## 📬 Contact
+
+For questions, feedback, or collaboration inquiries:
+
+📧 Email: info.help@gomechra.com
+
+💼 LinkedIn: Connect on LinkedIn[Connect on LinkedIn](https://www.linkedin.com/in/dominick-femia/)
+
+🌐 Portfolio: [gomechra.com](https://gomechra.com)
 
 ## 🤖 XGBoost Implementation
 
