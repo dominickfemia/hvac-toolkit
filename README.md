@@ -4,21 +4,34 @@
 
 ## Introduction
 
-This repository complements my project’s portfolio page by focusing on the machine learning extension of the provided friction calculators. It provides a standalone overview of the project so readers can understand the context, while remaining more concise than the full portfolio documentation. The toolkit addresses the classic Colebrook-White equation for fluid flow friction factor, using modern data-driven methods. In traditional engineering practice, the Colebrook-White equation is implicit and must be solved iteratively, which can be time-consuming for extensive calculations. The well-known Moody diagram was historically used to obtain friction factors graphically, based on a large compilation of experimental data (on the order of 10,000 tests, including Nikuradse’s pipe flow experiments). This project leverages machine learning (ML) to directly predict the Darcy–Weisbach friction factor from flow conditions, providing a fast, explicit solution without iteration.
+This repository complements my project’s portfolio page by focusing on the **machine learning extension** of the provided friction calculators.
+It provides enough context to stand on its own while remaining more concise than the full portfolio documentation.
+The toolkit addresses the classic **Colebrook-White equation** for fluid-flow friction factor, using modern data-driven methods.
+In traditional engineering practice, this equation is *implicit* and must be solved iteratively, an approach that becomes time-consuming for large or repeated calculations.
+The well-known **Moody diagram**, compiled from thousands of experimental tests (including Nikuradse's pipe-flow experiments), has long been used to estimate friction factor graphically.
+This project leverages **machine learning (ML)** to directly predict the **Darcy–Weisbach friction factor** directly from flow conditions, providing a fast, explicit, and highly accurate alternative to manual or iterative solutions.
 
 ## Project Overview and Scope
 
-Within the duct and pipe modules, the toolkit predicts friction factor given two inputs: Reynolds number (Re) and relative roughness (ε/D), which are the same parameters used in the Colebrook-White equation and Moody chart. This page provides:
+Within the **duct** and **pipe** modules, the toolkit predicts the **Darcy friction factor** from two key inputs: **Reynolds number (Re)** and **relative roughness (ε/D)**, the same parameters used in the Colebrook-White equation and Moody chart.
 
-- A brief recap of the problem and methodology.
-- An explanation of why machine learning is useful in this context.
-- Details on how the training and development data was obtained.
-- Fully commented code implementing an XGBoost regression model to learn the friction factor relationship.
-- Additional commented code illustrating the internal workings of gradient boosting.
+This repository provides:
+
+- A **concise recap of the problem** and underlying methodology.
+- A clear explanation of **why machine learning is valuable** in this context.
+- Details on **how the training data** (digitized from the Moody chart and Nikuradse's experiments) was prepared.
+- **Fully commented Python code** implementing an XGBoost regression model to learn the friction factor relationship.
+- **Supplementary example code** illustrating the internal mechanics of gradient boosting for educational purposes.
 
 ## Why Use Machine Learning for the Colebrook Equation?
 
-Using ML for this problem offers two main advantages: avoiding iterative solutions and basing the model on real data. The Colebrook–White equation requires iterative numerical methods to find the friction factor because the formula is implicit (f appears on both sides). In practical terms, solving for friction factor might require several computational steps or approximation techniques. A machine learning model, once trained, provides an explicit predictive function. Given Reynolds number and relative roughness, it directly outputs the friction factor with no need for iteration.
+Using **machine learning (ML)** for this problem offers two main advantages:
+1. Eliminates the need for iterative solutions.
+2. Anchors predictions to real experimental data.
+
+The **Colebrook–White equation** is implicit (the friction factor *f* appears on both sides), so it must be solved using iterative numerical methods or empirical approximations. In practice, each evaluation can require multiple computational steps, which become cumbersome when repeated across large systems or optimization routines.
+
+requires iterative numerical methods to find the friction factor because the formula is implicit (f appears on both sides). In practical terms, solving for friction factor might require several computational steps or approximation techniques. A machine learning model, once trained, provides an explicit predictive function. Given Reynolds number and relative roughness, it directly outputs the friction factor with no need for iteration.
 
 Moreover, the ML approach is inherently data-driven. The Moody diagram itself was a data-driven solution compiled from several experiments. Instead of relying on a specific empirical formula, a model can be trained on a broad set of known $(\text{Re}, \epsilon/D, f)$ data points and capture the complex relationship across laminar, transitional, and turbulent flow regimes. In this project, I used published data points from Moody’s chart and Nikuradse’s experiments so the model’s predictions are anchored to observed phenomena, potentially improving accuracy and ensuring that subtle trends are learned. Using machine learning is also flexible since the model can be retrained or expanded if new data become available.
 
