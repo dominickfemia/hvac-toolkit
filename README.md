@@ -39,7 +39,7 @@ In this project, the model was trained on **digitized Moody and Nikuradse chart 
 
 ## Data Collection and Preparation
 
-The first step was to assemble a dataset of known friction factor values by digitizing classical experimental results from **Moody (1944)** and **Nikuradse (1933)** charts. Digitizing both sources ensured consistency and overlap (particularly around values corresponding to *ε/D = 0.001*) while covering a broad range of **Reynolds numbers** and **relative roughness**.
+The first step was to assemble a dataset of known friction factor values by digitizing classical experimental results from **Moody (1944)** and **Nikuradse (1933)** charts using WebPLotDigitizer (https://automeris.io/). Digitizing both sources ensured consistency and overlap (particularly around values corresponding to *ε/D = 0.001*) while covering a broad range of **Reynolds numbers** and **relative roughness**.
 
 The Moody data (*Figure 1 below*) provided smoother surface conditions, whereas the Nikuradse data (*Figure 2 below*) contributed higher roughness curves. Together, they form a robust, complementary dataset.
 
@@ -69,7 +69,7 @@ For demonstration purposes, this repository references a placeholder file named 
 
 ## Model Selection: XGBoost Regression
 
-I chose XGBoost (Extreme Gradient Boosting) as the regression algorithm for this model due to its proven performance on tabular datasets. XGBoost is an open-source library that implements a powerful form of gradient-boosted decision trees. In gradient boosting, an ensemble of shallow “weak learner” trees are built sequentially, each new tree correcting the errors of the previous ones, which effectively minimizes the overall prediction error. XGBoost’s implementation is known for being fast and highly optimized, featuring parallelized tree building and advanced regularization to prevent overfitting.
+I chose XGBoost (Extreme Gradient Boosting) as the regression algorithm for this model due to its strong performance on structured, tabular datasets. XGBoost is an open-source library that implements a powerful form of gradient-boosted decision trees. In gradient boosting, an ensemble of shallow “weak learner” trees are built sequentially, each new tree correcting the errors of the previous ones, which effectively minimizes the overall prediction error. XGBoost’s implementation is known for being fast and highly optimized, featuring parallelized tree building and advanced regularization to prevent overfitting.
 
 For friction factor prediction, using XGBoost offers a few benefits:
 - Nonlinear function approximation: The relationship between $f$ and $(\text{Re}, \epsilon/D)$ is highly nonlinear as evidenced by the curves on the Moody chart. XGBoost can model complex nonlinear relationships by combining many decision tree splits, capturing the curvature in the data.
