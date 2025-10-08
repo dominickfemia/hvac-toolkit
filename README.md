@@ -191,7 +191,8 @@ If performance is unsatisfactory, consider adjusting hyperparameters (e.g., n_es
 
 6. **Generating the Lookup Table**
 
-   Produce a lookup table of friction factors that can be used directly without needing the machine learning code. Use the trained XGBoost model to predict friction factors on a grid of Re and roughness values. The script programmatically creates a fine grid, for example:
+   Produce a lookup table of predicted friction factors over a grid of *Re* and *ε/D*.
+   This lets downstream tools (e.g., Excel) use the table directly without running the ML code.
 
 ```python
 re_min, re_max = data["Re"].min(), data["Re"].max()
