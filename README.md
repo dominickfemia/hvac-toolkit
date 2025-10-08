@@ -85,9 +85,12 @@ In short, XGBoost serves as the **regression engine** that learns the mapping *f
 
 ## XGBoost Model Implementation (Code Outline)
 
-This repository contains a fully commented Python script that walks through the entire model development process, from reading data to outputting results. This script is designed to be easy to follow, even for those new to machine learning. Below is a step-by-step guide:
+This repository includes a **fully commented Python script** that walks through the complete model development process, from reading the data to generating the final results. It's written to be **easy to follow**, even for readers new to machine learning.
 
-1. **Importing Libraries:** Use Python’s scientific stack – primarily pandas for data handling, numpy for numeric operations, and xgboost (along with scikit-learn wrappers) for the regression model. All required libraries are listed at the top of the script.
+Below is the step-by-step outline:
+
+1. **Import Libraries**
+   Use Python’s scientific stack – primarily pandas for data handling, numpy for numeric operations, and xgboost (along with scikit-learn wrappers) for the regression model. All required libraries are listed at the top of the script.
 ```
 code
 ```
