@@ -98,7 +98,7 @@ Below is the step-by-step outline:
 
 **STOPPED HERE**
 
-```
+```python
 code
 ```
 
@@ -108,7 +108,7 @@ code
    Display a few rows using df.head() to verify that the data loaded correctly and that the columns (Re, ε/D, f) appear as     expected.
    For this example, a placeholder file *digitized_data.csv* is used to simulate the original dataset.
 
-```
+```python
 code
 ```
 
@@ -116,44 +116,38 @@ code
 
    Prepare the **input features** and **target variable**:
    
-```
-X = data[['Re', 'rel_roughness']].copy()
-y = data['friction_factor'].copy()
+```python
+code
 ```
 
    Next, split the dataset into **training** and **testing** sets using an 80/20 ratio. This ensures the model is evaluated on unseen data, providing a fair measure of performance. 
 
-```
+```python
 code
 ```
 
    Using train_test_split fron sklearn-learn maintains reproducibility and helps prevent overfitting by keeping a portion of the data strictly for validation.
    
 4. **Training the XGBoost Regressor:** Initialize an XGBoost regressor (for example, using XGBRegressor from xgboost.sklearn module) with some default or tuned hyperparameters:
-```
-from xgboost import XGBRegressor
-model = XGBRegressor(n_estimators=100, max_depth=5, learning_rate=0.1)
-model.fit(X_train, y_train)
+
+```python
+code
 ```
 
 The following explains each parameter: n_estimators is the number of trees, max_depth controls how complex each tree can be, and learning_rate scales the contribution of each new tree (preventing overfitting by making training more gradual).
 
 5. **Model Evaluation:** After training, check how well the model learned the data. The code computes predictions on the held-out test set:
-```
-y_pred = model.predict(X_test)
+
+```python
+code
 ```
 
 Measure error using metrics like Mean Absolute Error (MAE) or Root Mean Square Error (RMSE). This gives an idea of whether the model is within the ±5% range for most points, for example. The results (printed to console) will demonstrate if the model is sufficiently accurate. If not, iterate on hyperparameters or data.
 
 6. **Generating the Lookup Table:** Produce a lookup table of friction factors that can be used directly without needing the machine learning code. Use the trained XGBoost model to predict friction factors on a grid of Re and roughness values. The script programmatically creates a fine grid, for example:
-```
-import numpy as np
-Re_range = np.logspace(3.7, 8, num=100)        # e.g., 5e3 to 1e8 on log scale
-rr_range = np.logspace(-6, -2, num=50)         # e.g., 1e-6 to 1e-2 on log scale
-grid = [(Re, rr) for Re in Re_range for rr in rr_range]
-X_grid = pd.DataFrame(grid, columns=['Re', 'rel_roughness'])
-# If training used log10 features, remember to transform X_grid accordingly
-f_pred = model.predict(X_grid)
+
+```python
+code
 ```
 
 Reshape or organize the output into a table or matrix form. Save this table to a CSV file.
@@ -176,7 +170,7 @@ The goal is not to rebuild XGBoost entirely, but to show the **core learning pro
   Instead of constructing full decision trees from scratch, the demonstration below uses basic tools to mimic the key ideas.
   The code shows how boosting can iteratively fit to residuals to improve prediction accuracy.
 
-```
+```python
 from sklearn.tree import DecisionTreeRegressor
 
 # Start with an initial prediction (e.g., mean of y)
@@ -196,10 +190,10 @@ for i in range(n_boost_rounds):
     y_pred_current += tree.predict(X_train)
 ```
 
-This loop mimics the gradient boosting process. Each tree learns to predict the residual error left by the previous model iteration.
-Over successive boosting rounds, these small corrective models collectively reduce error and improve prediction accuracy.
-In this demonstration, only a few boosting iterations are shown for clarity.
-After training, the variable model_trees holds the sequence of fitted trees that together form the final ensemble model, a simplified representation of how XGBoost builds its predictions.
+   This loop mimics the gradient boosting process. Each tree learns to predict the residual error left by the previous model iteration.
+   Over successive boosting rounds, these small corrective models collectively reduce error and improve prediction accuracy.
+   In this demonstration, only a few boosting iterations are shown for clarity.
+   After training, the variable model_trees holds the sequence of fitted trees that together form the final ensemble model, a simplified representation of how XGBoost builds its predictions.
 
 - **Applying the Ensemble**
 
@@ -207,7 +201,7 @@ After training, the variable model_trees holds the sequence of fitted trees that
   Each tree contributes a small correction to the overall  prediction, which begins with the model's initial baseline estimate (often the mean of the target values).
   For a given input pair *(Re, ε/D)*:
   
-```
+```python
 def predict_ensemble(Re, rr):
     # Start with initial prediction
     pred = initial_pred
@@ -220,8 +214,8 @@ print("Ensemble prediction:", predict_ensemble(sample['Re'], sample['rel_roughne
 print("Actual friction factor:", y_test.iloc[0])
 ```
 
-The above function accumulates the contributions from each weak learner, combining them with the initial prediction to form the final output.
-After running this simplified booster, the script prints a comparison between the **ensemble’s predictions** and the **true friction factor values** for a few test examples. This demonstrates how even a small number of boosting rounds can begin to capture the nonlinear relationship between flow parameters and friction factor.
+   The above function accumulates the contributions from each weak learner, combining them with the initial prediction to form the final output.
+   After running this simplified booster, the script prints a comparison between the **ensemble’s predictions** and the **true friction factor values** for a few test examples. This demonstrates how even a small number of boosting rounds can begin to capture the nonlinear relationship between flow parameters and friction factor.
 
 ## Summary and Next Steps
 
@@ -242,52 +236,3 @@ Email: [info.help@gomechra.com](mailto:info.help@gomechra.com)
 LinkedIn: [Connect on LinkedIn](https://www.linkedin.com/in/dominick-femia/)
 
 Portfolio: [gomechra.com](https://gomechra.com)
-
-**DELETE BELOW, FOR REFERENCE**
-
-## 🤖 XGBoost Implementation
-
-<details>
-<summary>Click to expand Python code</summary>
-
-```python
-# train_xgboost.py
-# Fully commented script: load data, train XGBoost, export lookup table
-
-import pandas as pd
-import numpy as np
-from xgboost import XGBRegressor
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import mean_absolute_error
-
-# 1. Load dataset
-data = pd.read_csv("data/digitized_friction_data.csv")
-X = data[['Re', 'rel_roughness']]
-y = data['friction_factor']
-
-# Optional: transform features (log scale helps with range)
-X['logRe'] = np.log10(X['Re'])
-X['logRR'] = np.log10(X['rel_roughness'])
-X = X[['logRe', 'logRR']]
-
-# 2. Split into train/test
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-
-# 3. Train XGBoost
-model = XGBRegressor(n_estimators=200, max_depth=6, learning_rate=0.1)
-model.fit(X_train, y_train)
-
-# 4. Evaluate
-y_pred = model.predict(X_test)
-print("MAE:", mean_absolute_error(y_test, y_pred))
-
-# 5. Export lookup table
-Re_range = np.logspace(3.7, 8, num=100)
-rr_range = np.logspace(-6, -2, num=50)
-grid = [(Re, rr) for Re in Re_range for rr in rr_range]
-grid_df = pd.DataFrame(grid, columns=['Re','rel_roughness'])
-grid_df['logRe'] = np.log10(grid_df['Re'])
-grid_df['logRR'] = np.log10(grid_df['rel_roughness'])
-
-grid_df['f_pred'] = model.predict(grid_df[['logRe','logRR']])
-grid_df.to_csv("data/friction_factor_lookup.csv", index=False)
