@@ -195,17 +195,31 @@ If performance is unsatisfactory, consider adjusting hyperparameters (e.g., n_es
    This lets downstream tools (e.g., Excel) use the table directly without running the ML code.
 
 ```python
+# Derive grid ranges from the dataset
 re_min, re_max = data["Re"].min(), data["Re"].max()
-eps_min, eps_max = data["epsilon_D"].min(), data["epsilon_D"].max()
+rr_min, rr_max = data["rel_roughness"].min(), data["rel_roughness"].max()
 
-n_Re = 200
-n_eD = 200
-re_grid = np.geomspace(re_min, re_max, num=n_Re)
-eD_grid = np.geomspace(max(eD_min, 1e-8), eD_max, num=n_eD)
-grid_points = np.column_stack([grid_re.ravel(), grid_eps.ravel()])
+# Guard against any zeros (geomspace requires strictly positive bounds)
+re_min = max(re_min, 1e-6)
+rr_min = max(rr_min, 1e-8)
 
-grid_pairs = np.array([(Re, eD) for Re in Re_grid for eD in eD_grid])
-f_pred = model.predict(grid_pairs)
+# Define grid density
+n_re = 120
+n_rr = 80
+
+# Log-spaced sampling (values remain linear, spacing is geometric)
+Re_grid = np.geomspace(re_min, re_max, num=n_re)
+RR_grid = np.geomspace(rr_min, rr_max, num=n_rr)
+
+# Cartesian product → DataFrame of (Re, rel_roughness) pairs
+grid = (
+    pd.MultiIndex
+      .from_product([Re_grid, RR_grid], names=["Re", "rel_roughness"])
+      .to_frame(index=False)
+)
+
+# Predict friction factor on the grid
+grid["f_pred"] = model.predict(grid[["Re", "rel_roughness"]])
 
 export_long = pd.DataFrame({
     "Re": np.repeat(Re_grid, n_eD),
@@ -213,16 +227,19 @@ export_long = pd.DataFrame({
     "f_pred": f_pred
 })
 
-wide = export_long.pivot(index="Re", columns="eps_over_D", values="f_pred")
-wide = wide.sort_index(axis=0).sort_index(axis=1)
-wide.to_csv("friction_lookup_table.csv")
+# Export long format (tidy): one row per (Re, ε/D) with the predicted f
+grid.to_csv("friction_lookup.csv", index=False)
+print("Wrote friction_lookup.csv")
+
+# Optional: also export a wide (matrix) version for human inspection
+lookup_wide = grid.pivot(index="Re", columns="rel_roughness", values="f_pred")
+lookup_wide.to_csv("friction_factor_lookup_wide.csv")
+print("Wrote friction_factor_lookup_wide.csv")
 ```
 
-Reshape or organize the output into a table or matrix form. Save this table to a CSV file.
+7. **Results and Sample Usage**
 
-7. **Results and Sample Usage:** Across non-error producing input bounds (realistic observable data), the machine learning model produced results consistent with the Churchill approximation witin 0.2 to 4.9%.
-
-**CONTINUED HERE**
+   Across non-error producing input bounds (realistic observable data), the machine learning model produced results consistent with the Churchill approximation witin 0.2 to 4.9%.
 
 ## Understanding XGBoost’s Internal Workings
 
