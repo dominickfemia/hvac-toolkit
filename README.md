@@ -237,7 +237,7 @@ This repository is intended as a technical companion to that portfolio, highligh
 
 For questions, feedback, or collaboration inquiries:
 
-📧 Email: info.help@gomechra.com
+📧 Email: [info.help@gomechra.com](mailto:info.help@gomechra.com)
 
 💼 LinkedIn: Connect on LinkedIn[Connect on LinkedIn](https://www.linkedin.com/in/dominick-femia/)
 
