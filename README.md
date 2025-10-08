@@ -94,16 +94,20 @@ Below is the step-by-step outline:
    The script begins by importing Python's core scientific stack:
    - pandas for data handling
    - numpy for numerical operations
-   - xgboost (and scikit-learn wrappers) for regression modeling
-
-**STOPPED HERE**
+   - xgboost (and scikit-learn utilities) for regression modeling and evaluation
 
 ```python
+# Core libraries
 import pandas as pd
 import numpy as np
+
+# Model & utilities
 from xgboost import XGBRegressor
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import mean_squared_error, r2_score
+from sklearn.metrics import mean_squared_error, r2_score, mean_absolute error
+
+# Reproducibility for splits / models where applicable
+RANDOM_STATE = 42
 ```
 
 2. **Load the Dataset**
@@ -113,8 +117,8 @@ from sklearn.metrics import mean_squared_error, r2_score
    For this example, a placeholder file *digitized_data.csv* is used to simulate the original dataset.
 
 ```python
-df = pd.read_excel('digitized_data.csv', sheet_name='Sheet1')
-df.head()
+data = pd.read_csv('digitized_data.csv')
+data.head()
 ```
 
 3. **Feature Engineering and Data Splitting**
@@ -122,8 +126,8 @@ df.head()
    Prepare the **input features** and **target variable**:
    
 ```python
-X = df[['Re', 'epsilon_D']]
-y = df['f']
+X = data[['Re', 'epsilon_D']]
+y = data['f']
 ```
 
    Next, split the dataset into **training** and **testing** sets using an 80/20 ratio. This ensures the model is evaluated on unseen data, providing a fair measure of performance. 
@@ -156,17 +160,27 @@ Measure error using metrics like Mean Absolute Error (MAE) or Root Mean Square E
 6. **Generating the Lookup Table:** Produce a lookup table of friction factors that can be used directly without needing the machine learning code. Use the trained XGBoost model to predict friction factors on a grid of Re and roughness values. The script programmatically creates a fine grid, for example:
 
 ```python
-re_vals = np.logspace(np.log10(df['Re'].min()), np.log10(df['Re'].max()), 50)
-eps_vals = np.linspace(df['epsilon_D'].min(), df['epsilon_D'].max(), 20)
+re_min, re_max = data["Re"].min(), data["Re"].max()
+eps_min, eps_max = data["epsilon_D"].min(), data["epsilon_D"].max()
 
-grid_re, grid_eps = np.meshgrid(re_vals, eps_vals)
+n_Re = 200
+n_eD = 200
+re_grid = np.geomspace(re_min, re_max, num=n_Re)
+eD_grid = np.geomspace(max(eD_min, 1e-8), eD_max, num=n_eD)
 grid_points = np.column_stack([grid_re.ravel(), grid_eps.ravel()])
 
+grid_pairs = np.array([(Re, eD) for Re in Re_grid for eD in eD_grid])
+f_pred = model.predict(grid_pairs)
 
-predicted_f = model.predict(grid_points)
-f_grid = predicted_f.reshape(len(eps_vals), len(re_vals))
+export_long = pd.DataFrame({
+    "Re": np.repeat(Re_grid, n_eD),
+    "eps_over_D": np.tile(eD_grid, n_Re),
+    "f_pred": f_pred
+})
 
-lookup_df.to_excel('friction_factor_lookup_table.xlsx')
+wide = export_long.pivot(index="Re", columns="eps_over_D", values="f_pred")
+wide = wide.sort_index(axis=0).sort_index(axis=1)
+wide.to_csv("friction_lookup_table.csv")
 ```
 
 Reshape or organize the output into a table or matrix form. Save this table to a CSV file.
