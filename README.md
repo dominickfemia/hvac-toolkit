@@ -92,9 +92,11 @@ Below is the step-by-step outline:
 1. **Import Libraries**
 
    The script begins by importing Python's core scientific stack:
-   1. pandas for data handling
-   2. numpy for numerical operations
-   3. xgboost (and scikit-learn wrappers) for regression modeling
+   - pandas for data handling
+   - numpy for numerical operations
+   - xgboost (and scikit-learn wrappers) for regression modeling
+
+**STOPPED HERE**
 
 ```
 code
@@ -112,14 +114,21 @@ code
 
 3. **Feature Engineering and Data Splitting**
 
-   Prepare the input features and target variable:
+   Prepare the **input features** and **target variable**:
+   
 ```
 X = data[['Re', 'rel_roughness']].copy()
 y = data['friction_factor'].copy()
 ```
 
-Split the data into a training set and a test set, using a common ratio (80/20 here). Use sklearn.model_selection.train_test_split for reproducibility. The split ensures the model is tested on data it doesn't see during training.
+   Next, split the dataset into **training** and **testing** sets using an 80/20 ratio. This ensures the model is evaluated on unseen data, providing a fair measure of performance. 
 
+```
+code
+```
+
+   Using train_test_split fron sklearn-learn maintains reproducibility and helps prevent overfitting by keeping a portion of the data strictly for validation.
+   
 4. **Training the XGBoost Regressor:** Initialize an XGBoost regressor (for example, using XGBRegressor from xgboost.sklearn module) with some default or tuned hyperparameters:
 ```
 from xgboost import XGBRegressor
