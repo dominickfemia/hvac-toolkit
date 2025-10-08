@@ -297,7 +297,6 @@ print(f"Trained {len(model_trees)} sequential trees.")
   
 ```python
 def predict_ensemble(Re, rr):
-    """Compute the ensemble prediction for a given (Re, ε/D)."""
     pred = initial_pred
     for tree in model_trees:
         pred += tree.predict(np.array([[Re, rr]]))[0]
